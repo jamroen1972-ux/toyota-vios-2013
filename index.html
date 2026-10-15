@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toyota Vios 2013</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: #f1f5f9;
+  padding: 15px;
+  color: #222;
+}
+h2 { text-align: center; color: #b91c1c; }
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+input, textarea, button {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+button {
+  background: #15803d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+.delete { background: #dc2626; }
+.item {
+  border-bottom: 1px solid #ddd;
+  padding: 12px 0;
+}
+</style>
+</head>
+<body>
+
+<h2>🚗 Toyota Vios 2013</h2>
+
+<div class="card">
+<h3>บันทึกการซ่อมบำรุง</h3>
+
+<label>วันที่ซ่อม</label>
+<input type="date" id="date">
+
+<label>เลขไมล์ (กม.)</label>
+<input type="number" id="km">
+
+<label>รายการซ่อม</label>
+<textarea id="detail"></textarea>
+
+<label>ค่าใช้จ่าย (บาท)</label>
+<input type="number" id="cost">
+
+<button onclick="save()">บันทึกข้อมูล</button>
+</div>
+
+<div class="card">
+<h3>ประวัติการซ่อม</h3>
+<div id="records"></div>
+<h3 id="total"></h3>
+</div>
+
+<script>
+const KEY = "vios2013";
+let data = JSON.parse(localStorage.getItem(KEY) || "[]");
+
+function save() {
+  const date = document.getElementById("date").value;
+  const km = document.getElementById("km").value;
+  const detail = document.getElementById("detail").value;
+  const cost = document.getElementById("cost").value;
+
+  if (!date || !detail.trim()) {
+    alert("กรุณากรอกวันที่และรายการซ่อม");
+    return;
+  }
+
+  data.push({date, km, detail, cost});
+  localStorage.setItem(KEY, JSON.stringify(data));
+
+  document.getElementById("date").value = "";
+  document.getElementById("km").value = "";
+  document.getElementById("detail").value = "";
+  document.getElementById("cost").value = "";
+
+  show();
+  alert("บันทึกเรียบร้อย");
+}
+
+function removeItem(i) {
+  if (!confirm("ต้องการลบรายการนี้หรือไม่?")) return;
+  data.splice(i, 1);
+  localStorage.setItem(KEY, JSON.stringify(data));
+  show();
+}
+
+function show() {
+  const box = document.getElementById("records");
+  box.innerHTML = "";
+  let total = 0;
+
+  data.forEach((r, i) => {
+    total += Number(r.cost) || 0;
+
+    const item = document.createElement("div");
+    item.className = "item";
+
+    const info = document.createElement("div");
+    info.textContent =
+      "วันที่: " + r.date +
+      " | เลขไมล์: " + r.km +
+      " กม. | รายการ: " + r.detail +
+      " | ค่าใช้จ่าย: " + r.cost + " บาท";
+
+    const btn = document.createElement("button");
+    btn.className = "delete";
+    btn.textContent = "ลบรายการ";
+    btn.onclick = () => removeItem(i);
+
+    item.appendChild(info);
+    item.appendChild(btn);
+    box.appendChild(item);
+  });
+
+  document.getElementById("total").textContent =
+    "รวมค่าใช้จ่าย " +
+    total.toLocaleString("th-TH") +
+    " บาท";
+}
+
+show();
+</script>
+</body>
+</html>
