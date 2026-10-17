@@ -1,9 +1,9 @@
 /* Change VERSION with every published app update. No user records are stored here. */
-const VERSION='r5-20261017-1';
+const VERSION='r6-20261017-1';
 const BASE=new URL('./',self.location.href);
 const PREFIX='vios-care-shell-'+encodeURIComponent(BASE.pathname)+'-';
 const CACHE=PREFIX+VERSION;
-const FILES=['index.html','manifest.webmanifest','icon-192.png','icon-512.png'];
+const FILES=['index.html','cloud.js','manifest.webmanifest','icon-192.png','icon-512.png'];
 const HOME=new URL('index.html',BASE).href;
 self.addEventListener('install',event=>event.waitUntil((async()=>{
  const cache=await caches.open(CACHE);
