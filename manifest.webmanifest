@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "Vios Care",
+  "short_name": "Vios Care",
+  "description": "สมุดบำรุงรักษา Toyota Vios 2013 และ LPG Versus ส่วนตัว",
+  "lang": "th",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#16314e",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
