@@ -1,5 +1,5 @@
 /* Change VERSION with every published app update. No user records are stored here. */
-const VERSION='r6-20261017-1';
+const VERSION='r6-20261018-photo-remove-1';
 const BASE=new URL('./',self.location.href);
 const PREFIX='vios-care-shell-'+encodeURIComponent(BASE.pathname)+'-';
 const CACHE=PREFIX+VERSION;
