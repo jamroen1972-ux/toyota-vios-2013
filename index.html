@@ -436,9 +436,6 @@ function snapshot(question=''){
 function aiDataConsent(){try{if(localStorage.getItem('vios-ai-data-consent-v1')==='yes')return true;const ok=confirm('อนุญาตให้ ViosCare ส่งข้อมูลรถที่เกี่ยวข้องกับคำถามไปยัง Gemini เพื่อวิเคราะห์หรือไม่?\n\nระบบจะอ่านข้อมูลเท่านั้น ไม่แก้ไขข้อมูล และจะไม่ส่งรูปภาพหรือข้อมูลระบุตัวตน\n\nกดตกลงเพื่อจดจำการอนุญาตบนเครื่องนี้');if(ok)localStorage.setItem('vios-ai-data-consent-v1','yes');return ok}catch(e){return confirm('อนุญาตให้ส่งข้อมูลรถที่เกี่ยวข้องกับคำถามไปยัง Gemini เพื่อวิเคราะห์ครั้งนี้หรือไม่?')}}
 function extract(d){if(typeof d==='string')return d;const c=d?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('');if(c)return c;for(const k of ['reply','answer','response','text','message','output']){const v=d?.[k];if(typeof v==='string'&&v.trim())return v;if(typeof v?.text==='string')return v.text}return null}
 async function liveWeather(text){
- // Vehicle air filters are maintenance topics, not meteorological weather.
- const vehicleAirFilter=/(กรอง\s*อากาศ|ไส้\s*กรอง\s*อากาศ|air\s*filter|cabin\s*filter|กรองแอร์|ไส้กรองแอร์)/i.test(text);
- if(vehicleAirFilter)return null;
  const looksWeather=/(ฝน|อากาศ|พยากรณ์|อุณหภูมิ|weather)/i.test(text);
  if(!looksWeather)return null;
  // Open-Meteo is a public forecast API; do not invent live readings.
@@ -489,6 +486,13 @@ function localAiFallback(q){
  if(isShops){
   const shops=new Map();repairs.forEach(r=>{for(const [type,name,phone] of [['ร้านอะไหล่',r.seller,r.sellerPhone],['อู่ซ่อม',r.garage,r.garagePhone]]){if(name){const k=type+'|'+String(name).toLowerCase();if(!shops.has(k))shops.set(k,{type,name,phone})}}});
   const rows=[...shops.values()];return rows.length?'จากเมนูร้านอะไหล่และอู่ซ่อม พบ '+rows.length+' แห่งครับ '+rows.slice(0,12).map((x,i)=>(i+1)+'. '+x.type+' '+x.name+(x.phone?' โทร '+x.phone:'')).join(' ') +(rows.length>12?' ยังมีรายการอื่นในเมนูครับ':''):'ยังไม่พบชื่อร้านอะไหล่หรืออู่ซ่อมในประวัติซ่อมที่บันทึกไว้ครับ';
+ }
+ // Answer common cabin-filter questions locally when the external AI service is unavailable.
+ const isCabinFilter=/(กรอง\s*แอร์|ไส้\s*กรอง\s*แอร์|กรอง\s*อากาศ\s*ห้อง\s*โดยสาร|cabin\s*(?:air\s*)?filter)/i.test(t);
+ if(isCabinFilter){
+  if(/สกปรก|อุดตัน|อาการ|สังเกต|เสีย|ตัน|กลิ่น|ไม่เย็น|ลมเบา/.test(t))return 'อาการกรองแอร์รถยนต์สกปรกหรืออุดตัน ได้แก่ ลมแอร์ออกเบาลงแม้เปิดพัดลมแรง มีกลิ่นอับหรือกลิ่นฝุ่นในห้องโดยสาร ฝุ่นสะสมมากขึ้น และแอร์อาจเย็นช้าลงครับ ลองถอดตรวจกรองแอร์ตามคู่มือ หากดำหรืออุดตันมากควรเปลี่ยน แต่ถ้าลมยังเบาหรือแอร์ไม่เย็นหลังเปลี่ยน ควรให้ช่างตรวจระบบแอร์เพิ่มเติมครับ';
+  if(/เมื่อไหร่|กี่\s*(?:กิโล|โล|เดือน|ปี)|ระยะ|เปลี่ยน|ตรวจ/.test(t))return 'กรองแอร์หรือไส้กรองอากาศห้องโดยสารของ Toyota Vios ควรตรวจตามคู่มือประจำรถและสภาพการใช้งานครับ หากขับในที่ฝุ่นมากหรือเริ่มมีกลิ่นอับ ลมแอร์เบา ควรถอดตรวจและเปลี่ยนเมื่อสกปรกหรืออุดตัน โดยไม่จำเป็นต้องรอให้ครบระยะครับ';
+  return 'กรองแอร์รถยนต์ช่วยกรองฝุ่นก่อนลมเข้าสู่ห้องโดยสารครับ ถ้ากรองสกปรกอาจทำให้ลมแอร์เบา มีกลิ่นอับหรือฝุ่นมากขึ้น ควรตรวจและเปลี่ยนตามสภาพและคู่มือรถครับ';
  }
  if(isAdvice)return 'สำหรับ Toyota Vios ปี 2013 แนะนำตรวจระดับน้ำมันเครื่องและเปลี่ยนตามคู่มือหรือสภาพการใช้งาน ตรวจน้ำหล่อเย็นเมื่อเครื่องเย็น ตรวจลมยางและดอกยางเป็นประจำ ตรวจเบรก แบตเตอรี่ และสายพานตามระยะ ตรวจรอยรั่วของระบบเชื้อเพลิง และหากติด LPG ควรให้ช่างที่มีความชำนาญตรวจระบบแก๊สตามกำหนดครับ ควรอ้างอิงคู่มือประจำรถและประวัติซ่อมจริงเพื่อกำหนดระยะที่เหมาะสม';
  if(isDue){
