@@ -514,6 +514,49 @@ function localAiFallback(q){
   const renew=d.renewals||{};
   return renew.taxPaid?'วันที่ต่อภาษีรถยนต์ครั้งล่าสุดตามข้อมูลที่บันทึกไว้คือ '+dateLabel(renew.taxPaid)+' ครับ'+(renew.taxDue?' วันสิ้นอายุภาษีครั้งถัดไป '+dateLabel(renew.taxDue):''):'ยังไม่พบวันที่ต่อภาษีครั้งล่าสุดที่บันทึกไว้ครับ'+(renew.taxDue?' แต่วันสิ้นอายุภาษีที่บันทึกไว้คือ '+dateLabel(renew.taxDue):'');
  }
+ // Detailed reports for the four shortcut prompts; keep simple queries unchanged.
+ const isDeepReport=/(วิเคราะห์|จัดลำดับ|แนวโน้ม|สิ่งที่ควรติดตาม|พร้อมบอกวันที่)/.test(t);
+ const dueStatus=days=>days<0?'เลยกำหนด '+Math.abs(days)+' วัน':days===0?'ครบกำหนดวันนี้':'เหลือ '+days+' วัน';
+ const dueItems=()=>{
+  const renew=d.renewals||{},out=[];
+  renewalDates().forEach(([key,label])=>{if(!renew[key])return;const dt=dateObj(renew[key]);if(dt)out.push({label,date:dateLabel(renew[key]),days:dayDiff(dt),kind:'เอกสารและการตรวจ'});});
+  policies.forEach(pol=>{const fields=Object.entries(pol).filter(([k,v])=>/expire|expiry|endDate|dueDate/i.test(k)&&v);fields.forEach(([key,val])=>{const dt=dateObj(val);if(dt)out.push({label:String(pol.name||pol.type||'ประกันภัย/พ.ร.บ.'),date:dateLabel(val),days:dayDiff(dt),kind:'ประกันภัย'});});});
+  tasks.forEach(x=>{const dt=taskDueDate(x),km=taskDueKm(x),m=d.vehicle?.mileage,days=dt?dayDiff(dt):null,remainingKm=km!==null&&m!==''&&m!=null?km-num(m):null;
+   if(days===null&&remainingKm===null)return;
+   const label=String(x.name||'รายการบำรุงรักษา');
+   if(days!==null)out.push({label,date:dateLabel(dateISO(dt)),days,kind:'บำรุงรักษา',km:remainingKm});
+   else out.push({label,date:'ไม่ระบุวัน',days:null,kind:'บำรุงรักษา',km:remainingKm});
+  });
+  return out;
+ };
+ if(isDeepReport&&isRepair&&!isDue&&!isFuel){
+  if(!repairs.length)return 'ยังไม่พบประวัติซ่อมบำรุงที่บันทึกไว้ จึงยังวิเคราะห์งานล่าสุดไม่ได้ครับ';
+  const rows=[...repairs].sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  const latest=rows[0],name=String(latest.part||latest.name||latest.category||latest.description||'งานซ่อม');
+  let follow='ตรวจสอบอาการหลังซ่อม และติดตามตามคู่มือรถ';
+  if(/ดุมล้อ|ลูกปืนล้อ/.test(name))follow='สังเกตเสียงหอนหรือเสียงครูดจากล้อหลัง การสั่น และให้ช่างตรวจหากมีอาการผิดปกติ';
+  else if(/โช๊ค|โช้ค|shock/i.test(name))follow='สังเกตการกระเด้ง การรั่วซึม และการทรงตัวหลังเปลี่ยนโช้ค';
+  else if(/ยาง/.test(name))follow='ตรวจลมยาง การสึกผิดปกติ และการตั้งศูนย์ตามความเหมาะสม';
+  else if(/กันโคลง/.test(name))follow='สังเกตเสียงกุกกักขณะผ่านทางขรุขระและการทรงตัว';
+  const parts=rows.slice(0,5).map((r,i)=>(i+1)+'. '+dateLabel(r.date)+' '+String(r.part||r.name||r.category||r.description||'งานซ่อม')+' '+baht(cost(r)));
+  return 'วิเคราะห์ประวัติซ่อมบำรุงจากข้อมูลที่บันทึกไว้ '+repairs.length+' รายการ รวม '+baht(repairTotal)+' ครับ งานล่าสุดวันที่ '+dateLabel(latest.date)+' '+name+' ค่าใช้จ่าย '+baht(cost(latest))+' สิ่งที่ควรติดตาม: '+follow+' ประวัติล่าสุด: '+parts.join(' และ ')+' ข้อแนะนำนี้เป็นการติดตามอาการทั่วไป ไม่ใช่การวินิจฉัยสภาพรถจริงครับ';
+ }
+ if(isDeepReport&&isFuel&&!isDue&&!isRepair){
+  if(!fuel.length)return 'ยังไม่พบประวัติเติมเชื้อเพลิงที่บันทึกไว้ จึงยังวิเคราะห์ค่าใช้จ่ายหรือแนวโน้มไม่ได้ครับ';
+  const kinds=['เบนซิน','LPG'].map(kind=>{const a=fuel.filter(x=>String(x.fuelType||'').toLowerCase()===kind.toLowerCase());const liters=a.reduce((sum,x)=>sum+num(x.liters),0),amount=a.reduce((sum,x)=>sum+fuelAmount(x),0);return kind+' '+a.length+' ครั้ง '+liters.toFixed(2)+' ลิตร '+baht(amount)+(liters>0?' เฉลี่ย '+(amount/liters).toFixed(2)+' บาทต่อลิตร':'');});
+  const latest=[...fuel].sort((a,b)=>(String(b.date||'')+' '+String(b.time||'')).localeCompare(String(a.date||'')+' '+String(a.time||'')))[0];
+  return 'วิเคราะห์ประวัติเติมเชื้อเพลิงจากข้อมูลที่บันทึกไว้ '+fuel.length+' รายการ รวม '+baht(fuelTotal)+' ครับ '+kinds.join(' และ ')+' รายการล่าสุด '+String(latest.fuelType||'เชื้อเพลิง')+' วันที่ '+dateLabel(latest.date)+(latest.time?' เวลา '+latest.time:'')+' ปริมาณ '+num(latest.liters).toFixed(2)+' ลิตร ค่าใช้จ่าย '+baht(fuelAmount(latest))+' '+(fuel.length<2?'มีข้อมูลเพียง '+fuel.length+' รายการ จึงยังสรุปแนวโน้มค่าใช้จ่ายไม่ได้':'มีหลายรายการแล้ว แต่การประเมินแนวโน้มอัตราสิ้นเปลืองต่อกิโลเมตรต้องมีเลขไมล์ที่เชื่อถือได้ในแต่ละครั้ง')+'ครับ';
+ }
+ if(isDeepReport&&isDue){
+  const all=dueItems(),dated=all.filter(x=>x.days!==null).sort((a,b)=>a.days-b.days),undated=all.filter(x=>x.days===null),ordered=[...dated,...undated];
+  const renew=d.renewals||{};
+  const hasInsurance=policies.some(p=>Object.entries(p).some(([k,v])=>/expire|expiry|endDate|dueDate/i.test(k)&&v));
+  const missing=/ประกัน|พ\.?\s*ร\.?\s*บ\.?/.test(t)&&!hasInsurance?' ยังไม่พบวันหมดอายุประกันภัยหรือ พ.ร.บ. ในข้อมูลกรมธรรม์ที่บันทึกไว้ครับ':'';
+  if(!ordered.length)return 'ยังไม่พบรายการครบกำหนดที่บันทึกไว้ครับ'+missing;
+  const lines=ordered.slice(0,16).map((x,i)=>(i+1)+'. '+x.label+' ('+x.kind+') '+x.date+(x.days===null?'':', '+dueStatus(x.days))+(x.km!==undefined&&x.km!==null?', ระยะทาง'+(x.km<0?'เลยกำหนด '+Math.abs(x.km):'เหลือ '+x.km)+' กิโลเมตร':''));
+  const urgent=ordered.filter(x=>(x.days!==null&&x.days<=90)||(x.km!==undefined&&x.km!==null&&x.km<=1000));
+  return 'ตรวจสอบและจัดลำดับกำหนดจากข้อมูลที่บันทึกไว้ครับ เรียงรายการที่มีวันที่จากใกล้ที่สุดก่อน: '+lines.join(' และ ')+'. '+(urgent.length?'รายการที่ควรติดตามภายใน 90 วัน หรือระยะทางเหลือไม่เกิน 1,000 กิโลเมตร มี '+urgent.length+' รายการครับ':'ยังไม่มีรายการที่ถึงเกณฑ์แจ้งเตือนภายใน 90 วันหรือระยะทาง 1,000 กิโลเมตรครับ')+missing;
+ }
  // Answer common cabin-filter questions locally when the external AI service is unavailable.
  const isCabinFilter=/(กรอง\s*แอร์|ไส้\s*กรอง\s*แอร์|กรอง\s*อากาศ\s*ห้อง\s*โดยสาร|cabin\s*(?:air\s*)?filter)/i.test(t);
  if(isCabinFilter){
