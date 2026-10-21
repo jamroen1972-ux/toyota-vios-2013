@@ -504,7 +504,7 @@ function localAiFallback(q){
   const taskInfo=tasks.map(x=>{const dt=taskDueDate(x),dk=taskDueKm(x),m=v.mileage;const days=dt?dayDiff(dt):null,remainKm=dk!==null&&m!==''&&m!=null?dk-num(m):null;if((days!==null&&days<=90)||(remainKm!==null&&remainKm<=1000))return (x.name||'งานบำรุงรักษา')+(days!==null?' '+(days<0?'เลยกำหนด '+Math.abs(days)+' วัน':'เหลือ '+days+' วัน'):'')+(remainKm!==null?' ระยะทางเหลือ '+remainKm+' กิโลเมตร':'');return null}).filter(Boolean);
   return 'สรุปสถานะรถจากข้อมูลที่บันทึกไว้ครับ รถ '+[v.make,v.model,v.year].filter(Boolean).join(' ')+' เลขไมล์ '+km+' ประวัติซ่อม '+repairs.length+' รายการ '+baht(repairTotal)+' เติมเชื้อเพลิง '+fuel.length+' รายการ '+baht(fuelTotal)+' รวมค่าใช้จ่าย '+baht(repairTotal+fuelTotal)+' วันต่ออายุ '+(due.length?due.join(' และ '):'ยังไม่มีข้อมูล')+' รายการดูแลที่ใกล้หรือเลยกำหนด '+(taskInfo.length?taskInfo.slice(0,8).join(' และ '):'ยังไม่พบจากรายการที่บันทึกไว้')+' ครับ';
  }
- if(/(?:ครั้งล่าสุด|ล่าสุด|เมื่อไร|เมื่อไหร่|วันไหน)/.test(t)&&/(?:เติม|เชื้อเพลิง|เบนซิน|lpg|แก๊ส|น้ำมัน)/.test(t)){
+ if(!/(?:วิเคราะห์|แนวโน้ม|สรุปปริมาณ|ต้นทุนต่อลิตร)/.test(t)&&/(?:ครั้งล่าสุด|ล่าสุด|เมื่อไร|เมื่อไหร่|วันไหน)/.test(t)&&/(?:เติม|เชื้อเพลิง|เบนซิน|lpg|แก๊ส|น้ำมัน)/.test(t)){
   const kind=/lpg|แก๊ส/.test(t)?'LPG':/เบนซิน/.test(t)?'เบนซิน':null;
   const rows=fuel.filter(x=>!kind||String(x.fuelType||'').toLowerCase()===kind.toLowerCase()).sort((a,b)=>(String(b.date||'')+' '+String(b.time||'')).localeCompare(String(a.date||'')+' '+String(a.time||'')));
   if(!rows.length)return 'ยังไม่พบประวัติเติม'+(kind||'เชื้อเพลิง')+'ที่บันทึกไว้ครับ';
