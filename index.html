@@ -64,7 +64,25 @@ header .brand-layout{gap:22px}header .brand-photo{width:220px;max-width:44%;heig
 </style>
 <style>
 #nav[hidden] {display:none}
-#menuToggle {background:white;color:#16314e;min-height:44px;margin:0 0 8px}
+#menuToggle {
+  color:#eefaff;min-height:44px;margin:0 0 8px;padding:8px 16px;
+  border:1px solid #8cd8ea88;border-radius:13px;
+  background:linear-gradient(155deg,#81d6ee55,#24678577 46%,#102c48bb);
+  box-shadow:inset 0 1px 1px #baf2ff80,inset 0 -2px 4px #081c4277,0 4px 9px #07162570;
+  backdrop-filter:blur(8px);transition:transform .16s ease,box-shadow .16s ease;
+}
+#menuToggle:active {transform:translateY(2px);box-shadow:inset 0 2px 6px #07162580}
+#menuToggle:focus-visible,#drawerItems button:focus-visible {outline:2px solid #55c9da;outline-offset:2px}
+#drawerItems .drawer-icon {transition:transform .15s ease}
+#drawerItems button:active .drawer-icon {transform:scale(.84) rotate(-9deg)}
+#drawerItems button:focus-visible .drawer-icon {transform:translateY(-2px)}
+@media (hover:hover) {
+  #drawerItems button:hover:not(:active) .drawer-icon {transform:translateY(-3px) rotate(6deg)}
+}
+@media (prefers-reduced-motion:reduce) {
+  #menuToggle,#drawerItems .drawer-icon {transition:none}
+  #menuToggle:active,#sideMenu #drawerItems button .drawer-icon {transform:none}
+}
 #sideMenu {position:fixed;inset:0 auto 0 0;margin:0;width:min(82vw,320px);height:100%;max-height:100%;max-width:none;box-sizing:border-box;border:0;padding:16px;background:#f4f8fc;color:#16314e;overscroll-behavior:contain}
 #sideMenu[open] {animation:menu-enter .18s ease-out}
 @keyframes menu-enter {from {transform:translateX(-100%)}}
