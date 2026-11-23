@@ -7,7 +7,7 @@
 .mile-car::before{content:"";position:absolute;left:9%;right:8%;bottom:1%;height:11%;border-radius:50%;background:radial-gradient(ellipse,#060c12a8,transparent 72%)}
 .mile-car i{position:absolute;inset:0;background-position:center bottom;background-repeat:no-repeat;background-size:contain}
 .mile-park{transform:scaleX(-1)}
-.mile-walk{position:absolute;left:8%;bottom:2%;height:94%;width:24%;animation:mile-arrive 3.2s 4.8s ease-in-out both}
+.mile-walk{position:absolute;right:61%;right:calc(31.5% + min(27.5%, clamp(95.7px, 16.884vw, 121px)) + 14px);bottom:2%;height:94%;width:90px;width:clamp(90px,15.88vw,113.8px);animation:mile-arrive 3.2s 4.8s ease-in-out both}
 .mile-bear{position:relative;height:100%;aspect-ratio:366/520;margin:auto;background-position:center;background-size:100% 100%;animation:mile-step .46s 4.8s 7 ease-in-out}
 #mileSign{position:absolute;left:13%;top:48%;width:74%;height:19%;border-radius:4px;overflow:hidden}
 #mileSign svg{display:block;width:100%;height:100%;fill:currentColor;font-family:Sarabun,sans-serif;font-weight:600;text-anchor:middle}
