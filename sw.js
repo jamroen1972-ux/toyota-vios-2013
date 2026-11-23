@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.18-nearby-icons';
+const VERSION = 'r6.3.19-tire-shadows';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
