@@ -27,27 +27,25 @@ button:active{transform:translateY(1px)}
 .loc-status{font-size:13px;padding:9px 12px;border-radius:10px;background:#edf4fa;color:#264b6c;margin:8px 0}.loc-status.ok{background:#d8f4e3;color:#087047}.loc-status.bad{background:#fff1c3;color:#7a5600}
 
 header{padding:0;background:#0b1735}
-.vios-banner-frame{position:relative;max-width:1600px;aspect-ratio:3.66;margin:0 auto;overflow:hidden}
-.vios-banner-frame #menuToggle{position:absolute;z-index:1;top:8px;right:10px;margin:0;background:#102444e8}
+.vios-banner-frame{position:relative;max-width:1600px;margin:0 auto;overflow:hidden}
+.vios-banner-frame::before{content:"";display:block;padding-top:27.32%}
 .vios-home-banner{position:absolute;top:50%;width:100%;margin:0;transform:translateY(-50%);isolation:isolate}
 @media(max-width:600px){
-  .vios-banner-frame{aspect-ratio:3.57}
+  .vios-banner-frame::before{padding-top:28.01%}
   .vios-home-banner{top:52%}
-  .vios-banner-frame #menuToggle{top:4px;right:5px;padding-inline:8px;font-size:13px}
 }
 .vios-home-banner img{display:block;width:100%;height:auto}
-@media (prefers-reduced-motion:no-preference){
-  @supports (mask-image:url("vioscare-logo-mask.png")) or (-webkit-mask-image:url("vioscare-logo-mask.png")){
-    .vios-home-banner::after{
-      content:"";position:absolute;inset:0;pointer-events:none;
-      -webkit-mask:url("vioscare-logo-mask.png") center / 100% 100% no-repeat;
-      mask:url("vioscare-logo-mask.png") center / 100% 100% no-repeat;
-      background:linear-gradient(108deg,transparent 32%,#ffc75888 43%,#fff9e8 50%,#ffc75888 57%,transparent 68%) -55% 0 / 30% 100% no-repeat;
-      animation:vios-logo-shine 9s .45s linear infinite;
-    }
-  }
+.vios-home-banner .vios-logo-glint{
+  position:absolute;top:0;left:0;pointer-events:none;opacity:0;
+  animation:vios-logo-glint 9s .45s linear infinite;
 }
-@keyframes vios-logo-shine{0%{background-position:-55% 0}18%,100%{background-position:90% 0}}
+@keyframes vios-logo-glint{
+  0%{opacity:0;-webkit-clip-path:inset(0 100% 0 0);clip-path:inset(0 100% 0 0)}
+  3%{opacity:.62;-webkit-clip-path:inset(0 91% 0 5%);clip-path:inset(0 91% 0 5%)}
+  16%{opacity:.62;-webkit-clip-path:inset(0 52% 0 44%);clip-path:inset(0 52% 0 44%)}
+  18%,100%{opacity:0;-webkit-clip-path:inset(0 49% 0 51%);clip-path:inset(0 49% 0 51%)}
+}
+@media (prefers-reduced-motion:reduce){.vios-home-banner .vios-logo-glint{animation:none}}
 [hidden]{display:none!important}
 
 #ai .vios-ai-bubble{padding:14px;border-radius:15px;font-size:19px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;max-width:95%}#ai .vios-ai-bubble.user{background:#d9f1e6;align-self:flex-end}#ai .vios-ai-bubble.assistant{background:#eaf1fa;align-self:flex-start}#viosAiMessages{height:40vh;min-height:230px;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:12px;background:#f8fafc;border-radius:14px}#viosAiQuestion{font-size:20px;min-height:100px}#ai button{font-size:19px;min-height:52px}#ai label{font-size:17px}#ai .vios-ai-check{width:23px;height:23px}#ai .vios-ai-options{display:flex;gap:14px;align-items:center;flex-wrap:wrap}#ai .vios-ai-options label{display:flex;align-items:center;gap:8px}
@@ -83,15 +81,7 @@ header{padding:0;background:#0b1735}
 </style>
 <style>
 #nav[hidden] {display:none}
-#menuToggle {
-  color:#eefaff;min-height:44px;margin:0 0 8px;padding:8px 16px;
-  border:1px solid #8cd8ea88;border-radius:13px;
-  background:linear-gradient(155deg,#81d6ee55,#24678577 46%,#102c48bb);
-  box-shadow:inset 0 1px 1px #baf2ff80,inset 0 -2px 4px #081c4277,0 4px 9px #07162570;
-  backdrop-filter:blur(8px);transition:transform .16s ease,box-shadow .16s ease;
-}
-#menuToggle:active {transform:translateY(2px);box-shadow:inset 0 2px 6px #07162580}
-#menuToggle:focus-visible,#drawerItems button:focus-visible {outline:2px solid #55c9da;outline-offset:2px}
+#drawerItems button:focus-visible {outline:2px solid #55c9da;outline-offset:2px}
 #drawerItems .drawer-icon {transition:transform .15s ease}
 #drawerItems button:active .drawer-icon {transform:scale(.84) rotate(-9deg)}
 #drawerItems button:focus-visible .drawer-icon {transform:translateY(-2px)}
@@ -99,8 +89,8 @@ header{padding:0;background:#0b1735}
   #drawerItems button:hover:not(:active) .drawer-icon {transform:translateY(-3px) rotate(6deg)}
 }
 @media (prefers-reduced-motion:reduce) {
-  #menuToggle,#drawerItems .drawer-icon {transition:none}
-  #menuToggle:active,#sideMenu #drawerItems button .drawer-icon {transform:none}
+  #drawerItems .drawer-icon {transition:none}
+  #sideMenu #drawerItems button .drawer-icon {transform:none}
 }
 #sideMenu {position:fixed;inset:0 auto 0 0;margin:0;width:min(82vw,320px);height:100%;max-height:100%;max-width:none;box-sizing:border-box;border:0;padding:16px;background:#f4f8fc;color:#16314e;overscroll-behavior:contain}
 #sideMenu[open] {animation:menu-enter .18s ease-out}
@@ -142,7 +132,7 @@ header{padding:0;background:#0b1735}
 #openChatGpt:active {transform:translateY(1px)}
 #openChatGpt:focus-visible {outline:2px solid #266a91;outline-offset:3px}
 </style></head><body>
-<dialog id="sideMenu" aria-labelledby="menuTitle"><div class="drawer-heading"><strong id="menuTitle">ViosCare</strong><button type="button" id="closeMenu" autofocus>ปิด</button></div><div id="drawerItems"></div></dialog><header><div class="vios-banner-frame"><button type="button" id="menuToggle" aria-controls="sideMenu" aria-haspopup="dialog" aria-expanded="false">☰ เมนู</button><h1 class="vios-home-banner"><img src="vioscare-home-banner.webp" width="1800" height="600" alt="Vios Care — เคียงข้างคุณทุกเส้นทาง — With you every mile"></h1></div></header><main class="wrap"><nav id="nav" hidden><button data-tab="home" class="active">📊 ภาพรวม</button><button data-tab="ai">💬 ผู้ช่วย AI</button><button data-tab="add">🔧 บันทึกซ่อม</button><button data-tab="history">🗂️ ประวัติ</button><button data-tab="tasks">🗓️ กำหนดดูแล</button><button data-tab="vehicle">🚘 ข้อมูลรถและการต่ออายุ</button><button data-tab="navigation">🧭 นำทาง / จราจร / อากาศ</button><button data-tab="nearby">📍 บริการใกล้ฉัน</button><button data-tab="contacts">🏪 ร้านและอู่</button><button data-tab="fuelLog">⛽ เติมน้ำมัน / แก๊ส LPG</button><button data-tab="report">🧾 ค่าใช้จ่าย</button><button data-tab="travel">🗺️ เที่ยว / คาเฟ่ / ร้านอาหาร</button><button data-tab="insurance">🚨 แจ้งอุบัติเหตุ / เคลมประกัน</button><button data-tab="gptExport">📤 ส่งออกให้ ChatGPT</button><button data-tab="settings">🗄️ สำรองข้อมูล / พิมพ์ PDF</button><button data-tab="cloud">☁️ บัญชี / ซิงก์</button></nav><p id="cloudBadge" role="status" style="padding:0 16px;font-size:14px"></p>
+<dialog id="sideMenu" aria-labelledby="menuTitle"><div class="drawer-heading"><strong id="menuTitle">ViosCare</strong><button type="button" id="closeMenu" autofocus>ปิด</button></div><div id="drawerItems"></div></dialog><header><div class="vios-banner-frame"><h1 class="vios-home-banner"><img src="vioscare-home-banner.webp" width="1800" height="600" alt="Vios Care — เคียงข้างคุณทุกเส้นทาง — With you every mile"><img class="vios-logo-glint" src="vioscare-logo-mask.png" width="1800" height="600" alt="" aria-hidden="true"></h1></div></header><main class="wrap"><nav id="nav" hidden><button data-tab="home" class="active">📊 ภาพรวม</button><button data-tab="ai">💬 ผู้ช่วย AI</button><button data-tab="add">🔧 บันทึกซ่อม</button><button data-tab="history">🗂️ ประวัติ</button><button data-tab="tasks">🗓️ กำหนดดูแล</button><button data-tab="vehicle">🚘 ข้อมูลรถและการต่ออายุ</button><button data-tab="navigation">🧭 นำทาง / จราจร / อากาศ</button><button data-tab="nearby">📍 บริการใกล้ฉัน</button><button data-tab="contacts">🏪 ร้านและอู่</button><button data-tab="fuelLog">⛽ เติมน้ำมัน / แก๊ส LPG</button><button data-tab="report">🧾 ค่าใช้จ่าย</button><button data-tab="travel">🗺️ เที่ยว / คาเฟ่ / ร้านอาหาร</button><button data-tab="insurance">🚨 แจ้งอุบัติเหตุ / เคลมประกัน</button><button data-tab="gptExport">📤 ส่งออกให้ ChatGPT</button><button data-tab="settings">🗄️ สำรองข้อมูล / พิมพ์ PDF</button><button data-tab="cloud">☁️ บัญชี / ซิงก์</button></nav><p id="cloudBadge" role="status" style="padding:0 16px;font-size:14px"></p>
 <section id="ai" class="hidden"><div class="vios-chat-shell"><div class="vios-chat-banner" role="img" aria-label="ViosCare ผู้ช่วยดูแลรถ Toyota Vios รถสีขาวริมทะเล"></div><div class="vios-chat-heading"><span class="vios-chat-online"></span> ผู้ช่วย AI ViosCare <small>ถามเรื่องรถและข้อมูลที่บันทึกไว้ได้</small></div><div class="chatgpt-choices"><a id="openChatGpt" class="chatgpt-launch" aria-label="เปิดแอป ChatGPT" title="เปิดแอป ChatGPT" hidden><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="" width="48" height="48" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">GPT</span></a></div><div id="viosAiMessages" aria-live="polite"><div class="vios-ai-bubble assistant">สวัสดีครับ มีอะไรให้ผมช่วยดูแลรถ Vios ของคุณบ้างครับ</div></div><div class="vios-chat-controls"><div class="vios-chat-compose"><textarea id="viosAiQuestion" rows="1" aria-label="พิมพ์คำถาม" placeholder="พิมพ์คำถามที่นี่..."></textarea><button id="viosAiMic" type="button" aria-label="เริ่มหรือหยุดสนทนาด้วยเสียง">🎤<span class="vios-mic-label">เริ่มสนทนา</span></button><button id="viosAiSend" type="button" aria-label="ส่งข้อความ">➤</button></div><div class="vios-chat-shortcut-title">คำถามลัด · แตะเพื่อวิเคราะห์ทันที</div><div class="vios-ai-presets"><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติซ่อมบำรุงรถที่บันทึกไว้ สรุปงานล่าสุด ค่าใช้จ่าย และสิ่งที่ควรติดตาม">🔧 <span>ประวัติซ่อม</span></button><button type="button" data-vios-q="ช่วยตรวจวันครบกำหนดต่ออายุภาษีรถ ประกันภัย พ.ร.บ. และตรวจสภาพ LPG จากข้อมูลในแอป พร้อมบอกวันที่">📅 <span>วันต่ออายุ</span></button><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติเติมน้ำมันเบนซินและ LPG ล่าสุดในแอป สรุปปริมาณ ค่าใช้จ่าย และแนวโน้มที่คำนวณได้">⛽ <span>เบนซิน / LPG</span></button><button type="button" data-vios-q="ช่วยตรวจรายการบำรุงรักษาและการต่ออายุที่ใกล้ครบกำหนดจากข้อมูลรถ พร้อมจัดลำดับสิ่งที่ควรทำ">🔔 <span>ใกล้ครบกำหนด</span></button></div><p id="viosAiStatus" role="status" aria-live="polite">พร้อมช่วยดูแลรถของคุณ</p><p class="vios-chat-privacy">เมื่ออนุญาตครั้งแรก ระบบจะส่งข้อมูลรถที่เกี่ยวข้องให้ Gemini เพื่อวิเคราะห์เท่านั้น · AI ไม่แก้ไขข้อมูลรถ</p></div><input type="checkbox" id="viosAiAutoSpeak" checked hidden><button id="viosAiReplay" hidden type="button">ฟังซ้ำ</button><button id="viosAiStop" hidden type="button">หยุด</button></div></section>
 <section id="home">
 <div class="card dashboard-hero"><div class="row"><div><div class="eyebrow">V I O S &nbsp; C A R E</div><h2 style="margin:6px 0">🔔 ศูนย์แจ้งเตือนรถของฉัน</h2><p style="margin:0;opacity:.87;font-size:13px">รวมกำหนดภาษี ตรวจสภาพ LPG งานบำรุงรักษา และประกันอะไหล่</p></div><span class="hero-symbol">🚘</span></div></div>
@@ -739,7 +729,6 @@ mic.addEventListener('click',()=>{if(session){endSession();return}session=true;r
 
 </script><script>
 (() => {
-  const toggle = document.getElementById('menuToggle');
   const drawer = document.getElementById('sideMenu');
   const items = document.getElementById('drawerItems');
   const launcher = document.getElementById('openChatGpt');
@@ -763,20 +752,39 @@ mic.addEventListener('click',()=>{if(session){endSession();return}session=true;r
     });
     items.append(item);
   }
-  toggle.addEventListener('click', () => {
+  function openMenu() {
+    if (drawer.open) return;
     tabs.forEach((tab, index) => {
       items.children[index].setAttribute('aria-current', tab.classList.contains('active') ? 'page' : 'false');
     });
     drawer.showModal();
-    toggle.setAttribute('aria-expanded', 'true');
+  }
+  let swipeStart = null;
+  document.addEventListener('touchstart', event => {
+    const touch = event.touches[0];
+    swipeStart = !drawer.open && !document.querySelector('dialog[open]') &&
+      event.touches.length === 1 && touch.clientX <= 44 &&
+      !event.target.closest('input, select, textarea, [contenteditable]')
+      ? {x: touch.clientX, y: touch.clientY} : null;
+  }, {passive:true});
+  document.addEventListener('touchend', event => {
+    if (!swipeStart) return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - swipeStart.x;
+    const dy = Math.abs(touch.clientY - swipeStart.y);
+    swipeStart = null;
+    if (dx >= 65 && dx > dy * 1.5) openMenu();
+  }, {passive:true});
+  document.addEventListener('touchcancel', () => { swipeStart = null; }, {passive:true});
+  document.addEventListener('keydown', event => {
+    if (event.altKey && event.key.toLowerCase() === 'm' && !document.querySelector('dialog[open]')) {
+      event.preventDefault();
+      openMenu();
+    }
   });
   document.getElementById('closeMenu').onclick = () => drawer.close();
   drawer.addEventListener('click', event => {
     if (event.target === drawer && event.clientX >= drawer.getBoundingClientRect().right) drawer.close();
-  });
-  drawer.addEventListener('close', () => {
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.focus({preventScroll:true});
   });
 })();
 </script><script>
