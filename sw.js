@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.16-mile-banner';
+const VERSION = 'r6.3.16-mile-replay';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
