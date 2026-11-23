@@ -217,3 +217,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .dashboard-hero .mile-bell{display:inline-block;transform-origin:50% 16%;animation:mile-ring 2.1s ease-in-out infinite}
 @keyframes mile-ring{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 @media(prefers-reduced-motion:reduce){html:not(.motion-enabled) .dashboard-hero .mile-bell{animation:none}}
+
+#mileSign{transform-origin:50% 70%;animation:mile-sign-sway 3.6s ease-in-out 8s infinite}
+@keyframes mile-sign-sway{
+  0%,50%,100%{transform:translateX(-50%) rotate(0)}
+  25%{transform:translateX(calc(-50% + 1px)) rotate(1.5deg)}
+  75%{transform:translateX(calc(-50% - 1px)) rotate(-1.5deg)}
+}
+@media(prefers-reduced-motion:reduce){html:not(.motion-enabled) #mileSign{animation:none}}
