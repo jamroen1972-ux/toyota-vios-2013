@@ -173,7 +173,7 @@ button.alert-tile{width:100%;text-align:left;color:#172333}
     <div class="mile-road" aria-hidden="true"></div>
     <div class="mile-car" aria-hidden="true"><i class="mile-park"></i>
       <svg class="mile-plate" viewBox="0 0 570 316" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
-        <g transform="translate(500 225) rotate(-1.5) skewX(2) scale(1 .96)">
+        <g transform="translate(500 225) rotate(-4) skewX(3) scale(.7071 .96)">
           <rect x="-34" y="-15" width="68" height="30" rx="2.5" fill="#f7f5ec" stroke="#25272a" stroke-width="2"/>
           <g fill="#17191b" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="600">
             <text y="1" font-size="16">กจ 5221</text>
@@ -181,7 +181,7 @@ button.alert-tile{width:100%;text-align:left;color:#172333}
           </g>
         </g>
       </svg></div>
-    <div class="mile-walk"><div class="mile-bear"><span id="mileSign"></span></div></div>
+    <div class="mile-walk"><div class="mile-bear"><span id="mileSign"><svg viewBox="0 0 106 38" role="img"><text id="mileState" x="53" y="16" font-size="16"></text><text id="mileCount" x="53" y="33" font-size="16"></text></svg></span></div></div>
   </div>
   <button type="button" id="mileReplay" aria-label="เล่นแอนิเมชันรถและน้องไมล์อีกครั้ง"><span>↻ เล่นซ้ำ</span></button>
 </div>
@@ -346,7 +346,11 @@ function renderAlerts(){let a=[];
   }
   const urgent=a.filter(item=>item.level==='red').length;
   const sign=$('mileSign');
-  sign.textContent=urgent?'เร่งด่วน '+urgent+' รายการ':a.length?'เตือนล่วงหน้า '+a.length+' รายการ':'ยังไม่มีรายการเตือน';
+  const state=urgent?'เร่งด่วน':a.length?'เตือนล่วงหน้า':'ยังไม่มี';
+  const count=a.length?(urgent||a.length)+' รายการ':'รายการเตือน';
+  $('mileState').textContent=state;
+  $('mileCount').textContent=count;
+  sign.firstElementChild.setAttribute('aria-label',state+' '+count);
   sign.className=urgent?'urgent':a.length?'early':'clear';
   updateUrgentBanner(a);
   const order={red:0,green:1,yellow:2};a.sort((x,y)=>order[x.level]-order[y.level]||(x.days??99999)-(y.days??99999));
