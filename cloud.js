@@ -5,7 +5,7 @@ const URL_BASE='https://krhqrfmwvxtcrugbhywv.supabase.co',API_KEY='sb_publishabl
 const AUTH=KEY+'-auth',META=KEY+'-sync',OWNER=KEY+'-owner';
 const el=id=>document.getElementById(id);
 let session=null,busy=false,pending=null,dirtyForm=false;
-const status=t=>{el('cloudStatus').textContent=t;el('cloudBadge').textContent=t;};
+const status=t=>{el('cloudStatus').textContent=t;};
 function read(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
 function ui(){el('cloudLogin').hidden=!!session;el('cloudActions').hidden=!session;el('cloudUser').textContent=session?'บัญชี: '+session.user.email:'ยังไม่ได้เข้าสู่ระบบ • ข้อมูลเก็บอยู่ในเครื่อง';}
 function persist(s){localStorage.setItem(AUTH,JSON.stringify(s));session=s;ui();}
