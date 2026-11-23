@@ -160,7 +160,23 @@ header .brand-layout{gap:22px}header .brand-photo{width:220px;max-width:44%;heig
 <label><input style="width:auto" type="radio" name="range" value="dates"> เฉพาะวันที่</label>
 <div id="gptDates" class="grid" hidden><label>ตั้งแต่วันที่<input type="date" name="from" disabled></label><label>ถึงวันที่ (รวมวันสุดท้าย)<input type="date" name="to" disabled></label></div>
 </fieldset>
-<p class="muted">ไฟล์รวมเลขไมล์ล่าสุดและกำหนดที่บันทึกไว้ ดาวน์โหลดแล้วแนบไฟล์ใน ChatGPT</p>
+<fieldset class="field">
+<legend>หัวข้อวิเคราะห์ (เลือกได้หลายข้อ)</legend>
+<div class="grid">
+<label><input style="width:auto" type="checkbox" name="analysisTopic" value="overview"> ภาพรวมรถ</label>
+<label><input style="width:auto" type="checkbox" name="analysisTopic" value="repairs"> ประวัติซ่อมและค่าใช้จ่าย</label>
+<label><input style="width:auto" type="checkbox" name="analysisTopic" value="fuel"> น้ำมันและ LPG</label>
+<label><input style="width:auto" type="checkbox" name="analysisTopic" value="deadlines"> กำหนดที่จะถึง</label>
+</div>
+</fieldset>
+<div class="field"><label for="gptAnalysisFormat">รูปแบบผลลัพธ์</label>
+<select id="gptAnalysisFormat" name="analysisFormat">
+<option value="">ตามความเหมาะสม</option>
+<option>สรุปสั้น</option><option>ตาราง</option><option>รายงาน PDF</option><option>อินโฟกราฟิกแนวตั้ง</option>
+</select></div>
+<div class="field"><label for="gptAnalysisNotes">คำขอเพิ่มเติม</label>
+<textarea id="gptAnalysisNotes" name="analysisNotes" maxlength="2000" placeholder="เช่น เปรียบเทียบการเติม LPG สองครั้งล่าสุด"></textarea></div>
+<p class="muted">ไฟล์รวมเลขไมล์ล่าสุด กำหนดที่บันทึกไว้ และคำขอวิเคราะห์ที่ระบุ ดาวน์โหลดแล้วแนบไฟล์ใน ChatGPT</p>
 <div class="actions"><button type="submit">ดาวน์โหลดไฟล์สำหรับ ChatGPT</button><a class="btn secondary" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">เปิด ChatGPT</a></div>
 <p id="gptExportStatus" role="status"></p></form></div></section>
 <section id="settings" class="hidden"><div class="card" id="pwaCard"><h2>📲 ติดตั้ง Vios Care บนมือถือ</h2><p id="pwaInstallStatus" role="status">เปิดด้วย Chrome บน Android หากระบบพร้อมจะมีปุ่มติดตั้งแอปด้านล่าง</p><button type="button" id="pwaInstall" hidden>ติดตั้งแอป Vios Care</button><p class="muted">ติดตั้งเป็นแอป PWA เปิดแยกหน้าต่างจากเบราว์เซอร์ หากเห็นเพียง “สร้างทางลัด” ให้รอหรือตรวจไฟล์เว็บไซต์ก่อน ยังไม่ถือว่าติดตั้งแอปสำเร็จ</p><p id="pwaOfflineStatus" role="status">กำลังเตรียมการใช้งานออฟไลน์…</p><div class="actions"><button type="button" class="secondary" id="pwaCheckUpdate">ตรวจอัปเดตแอป</button><button type="button" id="pwaUpdate" hidden>บันทึกแล้ว อัปเดตแอป</button><button type="button" class="secondary" id="pwaPersist">ขอเก็บข้อมูลถาวรในเครื่อง</button></div><p id="pwaStorageStatus" class="muted">ข้อมูลเก็บในเครื่อง ไม่มีการสำรองขึ้นคลาวด์อัตโนมัติ ควรสำรอง JSON เป็นประจำ</p></div><div class="card"><h2>สำรองและกู้คืนข้อมูล</h2><p>ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้ ไม่ได้อัปโหลดขึ้นเซิร์ฟเวอร์ หากล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนโทรศัพท์ ข้อมูลอาจหายได้</p><div class="actions"><button onclick="exportData()">ดาวน์โหลดไฟล์สำรอง JSON</button><label class="btn secondary" style="cursor:pointer">นำเข้าไฟล์สำรอง<input id="importFile" type="file" accept="application/json,.json" hidden></label></div><p class="muted">ควรสำรองหลังบันทึกทุกครั้งที่สำคัญ ไฟล์สำรองมีรูปภาพและข้อมูลติดต่อ จึงควรเก็บอย่างปลอดภัย</p></div><div class="card"><h2>🖨️ พิมพ์รายงาน / บันทึก PDF</h2><div class="grid"><div class="field"><label>หมวดรายงาน</label><select id="printCategory"></select></div><div class="field"><label>เริ่มวันที่</label><input type="date" id="printFrom"></div><div class="field"><label>สิ้นสุดวันที่</label><input type="date" id="printTo"></div></div><label><input id="printImages" type="checkbox" style="width:auto"> แนบรูปใบเสร็จ / หลักฐานใน PDF (ไม่เลือก = รายงานข้อความ)</label><label><input id="printSensitive" type="checkbox" style="width:auto"> แสดงเลขตัวถัง / เลขเครื่อง / เลขกรมธรรม์ใน PDF</label><p class="muted">ตัวเลือกมีผลกับรายงานเท่านั้น ไม่ลบข้อมูลต้นฉบับ ภาพหลักฐานอาจมีข้อมูลส่วนตัวอยู่ในภาพ เลือกหมวดและช่วงวันที่ หรือเว้นวันที่ว่างเพื่อดูทั้งหมด</p><button type="button" onclick="printVios()">🖨️ พิมพ์รายงาน / บันทึก PDF</button></div><div class="card"><h2>🗑️ ล้างข้อมูลทดสอบทั้งหมด</h2><p>การลบจะลบประวัติซ่อม ค่าใช้จ่าย ประกัน เคลม สถานที่โปรด ร้านที่บันทึก และรูปภาพทั้งหมดในเว็บไซต์นี้ โปรดดาวน์โหลดและตรวจสอบไฟล์ JSON สำรองก่อน</p><button type="button" class="red" onclick="wipeVios()">🗑️ ล้างข้อมูลทดสอบทั้งหมด</button></div></section></main><footer>ViosCare • R6.3.16 • พัฒนาโดย Jamroen Suwanphum • Login + Sync • ข้อมูลอยู่ในอุปกรณ์ของคุณ</footer>
@@ -759,7 +775,26 @@ mic.addEventListener('click',()=>{if(session){endSession();return}session=true;r
   function fields(row, keys) {
     return Object.fromEntries(keys.split(' ').map(key => [key, row[key] ?? null]));
   }
-  function report(start, end, now) {
+  const topicInstructions = {
+    "overview": "สรุปเลขไมล์ งานซ่อมล่าสุด และสิ่งที่ควรติดตาม",
+    "repairs": "สรุปค่าซ่อมแยกตามเดือน พร้อมรายการหลักและแยกค่าอะไหล่กับค่าแรง",
+    "fuel": "แยกน้ำมันกับ LPG ตามประเภท สรุปลิตรและค่าใช้จ่าย คำนวณกิโลเมตรต่อลิตรและบาทต่อกิโลเมตรเมื่อมีเลขไมล์และข้อมูลเติมเต็มถังครบ ระบุช่วงที่ใช้คำนวณ",
+    "deadlines": "สรุปกำหนดบำรุงรักษา ภาษี ตรวจสภาพ LPG และประกัน เรียงตามความเร่งด่วน โดยระบุวันที่หรือเลขไมล์ตามที่บันทึก"
+  };
+  function readAnalysisRequest(values) {
+    const topics = values.getAll('analysisTopic').map(topic => topicInstructions[topic]).filter(Boolean);
+    const format = values.get('analysisFormat');
+    const additionalInstructions = values.get('analysisNotes').trim();
+    if (!topics.length && !format && !additionalInstructions) return null;
+    return {
+      instruction: 'วิเคราะห์ข้อมูลรถในไฟล์นี้เป็นภาษาไทยตามคำขอของผู้ใช้ ระบุเมื่อข้อมูลไม่พอสำหรับการคำนวณ',
+      topics,
+      format: format || null,
+      additionalInstructions: additionalInstructions || null
+    };
+  }
+
+  function report(start, end, now, analysisRequest) {
     const matches = row => !start || (parseDate(row.date) && row.date >= start && row.date <= end);
     const repairs = db.repairs.filter(matches).map(row => {
       const warranty = warrantyEnd(row);
@@ -770,6 +805,7 @@ mic.addEventListener('click',()=>{if(session){endSession();return}session=true;r
     }));
     return {
       report: 'ViosCare vehicle analysis',
+      ...(analysisRequest ? {analysisRequest} : {}),
       exportedAt: now.toISOString(),
       historyRange: start ? {from: start, to: end} : 'all',
       units: {mileage: 'km', volume: 'L', money: 'THB'},
@@ -797,7 +833,7 @@ mic.addEventListener('click',()=>{if(session){endSession();return}session=true;r
       return;
     }
     const now = new Date();
-    const data = report(start, end, now);
+    const data = report(start, end, now, readAnalysisRequest(new FormData(form)));
     const url = URL.createObjectURL(new Blob([JSON.stringify(data)], {type: 'application/json'}));
     const link = document.createElement('a');
     link.href = url;
