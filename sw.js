@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.16-tap-banner';
+const VERSION = 'r6.3.17-bear-spacing';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
