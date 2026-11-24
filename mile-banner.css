@@ -338,9 +338,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mile-strip small {grid-column:1/-1;font-size:.83em}
 .mile-strip.red {background:rgba(129,22,41,.95);color:white}
 .mile-strip.yellow {
-  background:linear-gradient(115deg,rgba(255,250,215,.76),rgba(255,238,170,.60));
-  color:#20170b;border-color:#fff4cdd9 #c4a36eab #917345b8 #fff5d2d9;
-  box-shadow:inset 0 1px 1px #fffbeddb,inset 0 -1px 1px #ffedbd82,0 2px 3px #29180866;
+  background:linear-gradient(115deg,rgba(255,255,235,.55),rgba(255,251,216,.39) 64%,rgba(255,253,230,.46));
+  color:#17130c;border-color:#fffce5c2 #fff2bf66 #baab835c #fffae199;
+  text-shadow:0 0 2px #fffce4bf;
+  box-shadow:inset 0 1px 0 #fffef196,0 1px 2px #382b191f;
 }
 .mile-strip.green {background:rgba(206,242,218,.94);color:#123d2c}
 @media (min-width:640px) and (orientation:landscape) {
