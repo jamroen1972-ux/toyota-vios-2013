@@ -1,8 +1,8 @@
-const VERSION = 'r6.3.33-wall-sign';
+const VERSION = 'r6.3.34-wall-wordmark';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
-const FILES = ['index.html', 'cloud.js', 'mile-banner.css', 'service-icons.webp', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'vioscare-chat-banner.jpg', 'vioscare-home-banner.webp', 'vioscare-logo-mask.png'];
+const FILES = ['index.html', 'cloud.js', 'mile-banner.css', 'service-icons.webp', 'vios-wall-wordmark.webp', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'vioscare-chat-banner.jpg', 'vioscare-home-banner.webp', 'vioscare-logo-mask.png'];
 const HOME = new URL('index.html', BASE).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
