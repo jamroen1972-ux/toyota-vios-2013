@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.22-showroom-entry';
+const VERSION = 'r6.3.23-mascot-stride';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
