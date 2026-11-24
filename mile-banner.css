@@ -308,3 +308,47 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   html:not(.motion-enabled) .dashboard-hero:not(.manual-replay) .mile-legs::after {animation:none}
 }
 .dashboard-hero.rewinding .mile-legs::before,.dashboard-hero.rewinding .mile-legs::after {animation:none!important}
+
+.mile-wall {
+  display:grid;gap:4px;min-width:0;align-content:center;
+  position:relative;z-index:1;pointer-events:none;
+}
+.mile-strip {
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+  column-gap:6px;padding:4px 9px;border:1px solid rgba(255,255,255,.55);
+  border-radius:8px;box-shadow:0 2px 6px #241b1438,inset 0 1px #ffffff42;
+  font:600 clamp(12px,1.5vw,20px)/1.22 Sarabun,sans-serif;
+  animation:mile-panel-in .42s ease-out 9.85s both;
+}
+.mile-strip[hidden] {display:none}
+.mile-strip:nth-child(2) {animation-delay:10.35s}
+.mile-strip:nth-child(3) {animation-delay:10.85s}
+.mile-strip b,.mile-strip small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mile-strip small {grid-column:1/-1;font-size:.83em}
+.mile-strip.red {background:rgba(129,22,41,.95);color:white}
+.mile-strip.yellow {background:rgba(255,222,144,.94);color:#322411}
+.mile-strip.green {background:rgba(206,242,218,.94);color:#123d2c}
+@media (min-width:640px) and (orientation:landscape) {
+  .mile-wall {padding:4px 0 4px 7%}
+}
+@keyframes mile-panel-in {
+  from {opacity:0;transform:translateX(-12px)}
+  to {opacity:1;transform:none}
+}
+/* Turn the head above the collar; the notice stays facing the reader. */
+.mile-bear::before {clip-path:inset(39% 0 30% 0)}
+.mile-bear::after {
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:var(--bear-art) center / 100% 100% no-repeat;
+  clip-path:inset(0 0 60% 0);transform-origin:50% 39%;
+  animation:mile-look-left .55s ease-out 9.4s both;
+}
+@keyframes mile-look-left {
+  from {transform:none}
+  to {transform:translateX(-2%) perspective(250px) rotateY(-20deg) rotate(-3deg)}
+}
+.dashboard-hero.rewinding .mile-bear::after {animation:none!important}
+@media(prefers-reduced-motion:reduce) {
+  html:not(.motion-enabled) .dashboard-hero:not(.manual-replay) .mile-strip,
+  html:not(.motion-enabled) .dashboard-hero:not(.manual-replay) .mile-bear::after {animation:none}
+}
