@@ -273,14 +273,23 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   }
 }
 
-/* The wall badge sits behind the moving characters. */
-.dashboard-hero.card::before {
-  content:"";position:absolute;left:4%;bottom:35%;width:9%;height:18%;
-  background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20110%2056%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23e9d3a4%22%20stroke-width%3D%223.5%22%3E%3Cellipse%20cx%3D%2255%22%20cy%3D%2228%22%20rx%3D%2248%22%20ry%3D%2223%22%2F%3E%3Cellipse%20cx%3D%2255%22%20cy%3D%2228%22%20rx%3D%2210%22%20ry%3D%2222%22%2F%3E%3Cellipse%20cx%3D%2255%22%20cy%3D%2218%22%20rx%3D%2231%22%20ry%3D%2210%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
-  filter:drop-shadow(0 2px 1px #301d10);pointer-events:none;
+/* A brushed brass inlay follows the wall heading as its text wraps. */
+.dashboard-hero h2::after {
+  content:"";
+  display:block;
+  width:32%;
+  height:2px;
+  margin:3px auto 0;
+  border-radius:2px;
+  background:linear-gradient(90deg,transparent,#c39657 20%,#ffe4aa 52%,#b98744 81%,transparent);
+  box-shadow:0 2px 5px rgba(255,182,91,.3);
+  pointer-events:none;
 }
 @media (min-width:640px) and (orientation:landscape) {
-  .dashboard-hero.card::before {left:9%;bottom:32%;width:12%;height:18%}
+  .dashboard-hero h2::after {
+    width:74%;margin:clamp(4px,.8vh,9px) 0 0;
+    background:linear-gradient(90deg,#bd9258,#ffe5ae 20%,#cba46e 65%,transparent);
+  }
 }
 .mile-walk::before {
   content:"";position:absolute;left:13%;right:12%;bottom:-1%;height:6%;
