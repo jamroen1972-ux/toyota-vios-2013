@@ -172,9 +172,16 @@ button.alert-tile{width:100%;text-align:left;color:#172333}
 .service-picture{display:block;width:48px;height:48px;width:clamp(35px,5vw,58px);height:clamp(35px,5vw,58px);background-image:url("./service-icons.webp");background-size:1100% 100%;background-repeat:no-repeat}
 /* The transparent wordmark uses the lettering from the main banner. */
 .dashboard-hero .mile-notices h2 {
-  width:76%;max-width:17rem;margin:3px 0 5px;padding:5px 0;
+  width:76%;max-width:17rem;margin:3px auto 5px;padding:5px 0;z-index:0;
   text-align:center;background:none;color:#ffe5af;filter:none;
   text-shadow:0 1px 2px #432611;animation:none;
+}
+.dashboard-hero .mile-stage {z-index:1}
+@media (min-width:640px) and (orientation:landscape) {
+  /* Center the heading across the full timber column; keep the icon row inset. */
+  .dashboard-hero .mile-notices {padding-left:0}
+  .dashboard-hero .mile-wall {margin-left:6%}
+  .dashboard-hero .mile-notices h2 {width:71.44%}
 }
 .wall-wordmark {display:block;position:relative;filter:drop-shadow(0 2px 1px #452710)}
 .wall-wordmark img {display:block;width:100%;height:auto}

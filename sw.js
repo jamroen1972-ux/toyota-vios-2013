@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.34-wall-wordmark';
+const VERSION = 'r6.3.35-centered-wordmark';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
