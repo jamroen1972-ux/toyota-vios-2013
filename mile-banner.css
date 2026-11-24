@@ -310,12 +310,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .dashboard-hero.rewinding .mile-legs::before,.dashboard-hero.rewinding .mile-legs::after {animation:none!important}
 
 .mile-wall {
-  display:grid;gap:4px;min-width:0;align-content:center;
-  position:relative;z-index:1;pointer-events:none;
+  --strip-height:clamp(36px,5vw,60px);
+  display:grid;grid-auto-rows:var(--strip-height);gap:4px;min-width:0;align-content:start;
+  box-sizing:border-box;max-height:calc(4 * var(--strip-height) + 20px);padding:4px;
+  overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
+  position:relative;z-index:3;scrollbar-width:thin;scrollbar-color:#ba9a68 transparent;
+}
+.mile-wall:empty {display:none}
+.mile-wall:focus-visible {outline:2px solid #fff2c4;outline-offset:-2px}
+@media (min-width:640px) and (orientation:landscape) {
+  .mile-wall {--strip-height:clamp(32px,9.6vh,60px)}
+  .mile-wall:empty {display:block;visibility:hidden}
 }
 .mile-strip {
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
-  column-gap:6px;padding:4px 9px;border:1px solid rgba(255,255,255,.55);
+  min-height:0;align-content:center;column-gap:6px;padding:2px 7px;border:1px solid rgba(255,255,255,.55);
   border-radius:8px;box-shadow:0 2px 6px #241b1438,inset 0 1px #ffffff42;
   font:600 clamp(12px,1.5vw,20px)/1.22 Sarabun,sans-serif;
   animation:mile-panel-in .42s ease-out 9.85s both;
@@ -323,10 +332,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mile-strip[hidden] {display:none}
 .mile-strip:nth-child(2) {animation-delay:10.35s}
 .mile-strip:nth-child(3) {animation-delay:10.85s}
+.mile-strip:nth-child(n+4) {animation-delay:11.35s}
 .mile-strip b,.mile-strip small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mile-strip small {grid-column:1/-1;font-size:.83em}
 .mile-strip.red {background:rgba(129,22,41,.95);color:white}
-.mile-strip.yellow {background:rgba(255,222,144,.94);color:#322411}
+.mile-strip.yellow {
+  background:linear-gradient(115deg,rgba(255,250,215,.76),rgba(255,238,170,.60));
+  color:#20170b;border-color:#fff4cdd9 #c4a36eab #917345b8 #fff5d2d9;
+  box-shadow:inset 0 1px 1px #fffbeddb,inset 0 -1px 1px #ffedbd82,0 2px 3px #29180866;
+}
 .mile-strip.green {background:rgba(206,242,218,.94);color:#123d2c}
 @media (min-width:640px) and (orientation:landscape) {
   .mile-wall {padding:4px 0 4px 7%}
