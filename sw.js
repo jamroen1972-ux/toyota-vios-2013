@@ -1,4 +1,4 @@
-const VERSION = 'r6.3.26-daylit-entry';
+const VERSION = 'r6.3.27-wall-alerts';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'vios-care-shell-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
