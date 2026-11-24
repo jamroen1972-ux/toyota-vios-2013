@@ -333,6 +333,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mile-strip:nth-child(2) {animation-delay:10.35s}
 .mile-strip:nth-child(3) {animation-delay:10.85s}
 .mile-strip:nth-child(n+4) {animation-delay:11.35s}
+.mile-strip b {font-family:Mali,Sarabun,sans-serif;font-weight:600;line-height:1.4}
 .mile-strip b,.mile-strip small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mile-strip small {grid-column:1/-1;font-size:.83em}
 .mile-strip.red {background:rgba(129,22,41,.95);color:white}
