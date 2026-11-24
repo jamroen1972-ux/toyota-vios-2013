@@ -7,7 +7,7 @@
 .mile-car::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20570%20316%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22s%22%3E%3Cstop%20stop-color%3D%22%2306080b%22%20stop-opacity%3D%22.9%22%2F%3E%3Cstop%20offset%3D%22.48%22%20stop-color%3D%22%23080a0d%22%20stop-opacity%3D%22.57%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23080a0d%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Cg%20fill%3D%22url(%23s)%22%3E%3Cellipse%20cx%3D%22276%22%20cy%3D%22269%22%20rx%3D%22255%22%20ry%3D%2223%22%20transform%3D%22rotate(4%20276%20269)%22%2F%3E%3Cellipse%20cx%3D%2261%22%20cy%3D%22260%22%20rx%3D%2240%22%20ry%3D%228%22%2F%3E%3Cellipse%20cx%3D%22298%22%20cy%3D%22307%22%20rx%3D%2248%22%20ry%3D%228%22%2F%3E%3Cellipse%20cx%3D%22491%22%20cy%3D%22283%22%20rx%3D%2233%22%20ry%3D%226%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center bottom / contain no-repeat;pointer-events:none}
 .mile-car i{position:absolute;inset:0;background-position:center bottom;background-repeat:no-repeat;background-size:contain}
 .mile-park{transform:scaleX(-1)}
-.mile-walk{position:absolute;right:61%;right:calc(31.5% + min(27.5%, clamp(95.7px, 16.884vw, 121px)) + 14px);bottom:2%;height:94%;width:90px;width:clamp(90px,15.88vw,113.8px);animation:mile-arrive 4.6s 4.8s cubic-bezier(.22,.23,.66,.94) both}
+.mile-walk{position:absolute;right:61%;right:calc(31.5% + min(27.5%, clamp(95.7px, 16.884vw, 121px)) + 21px);bottom:2%;height:94%;width:90px;width:clamp(90px,15.88vw,113.8px);animation:mile-arrive 4.6s 4.8s cubic-bezier(.22,.23,.66,.94) both}
 .mile-bear{position:relative;height:100%;aspect-ratio:366/520;margin:auto;background-position:center;background-size:100% 100%;}
 #mileSign{position:absolute;left:13%;top:48%;width:74%;height:19%;border-radius:4px;overflow:hidden}
 #mileSign svg{display:block;width:100%;height:100%;fill:currentColor;font-family:Sarabun,sans-serif;font-weight:600;text-anchor:middle}
@@ -268,7 +268,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   }
   .mile-stage .mile-walk {
     --walk-entry:calc(151.52% + 4px);
-    right:calc(71% + 12px);width:min(28%,24vh,190px);height:auto;
+    right:calc(71% + 24px);width:min(28%,24vh,190px);height:auto;
     aspect-ratio:366/520;bottom:7%;
   }
 }
@@ -309,44 +309,47 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 .dashboard-hero.rewinding .mile-legs::before,.dashboard-hero.rewinding .mile-legs::after {animation:none!important}
 
-.mile-wall {
-  --strip-height:clamp(36px,5vw,60px);
-  display:grid;grid-auto-rows:var(--strip-height);gap:4px;min-width:0;align-content:start;
-  box-sizing:border-box;max-height:calc(4 * var(--strip-height) + 20px);padding:4px;
-  overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
-  position:relative;z-index:3;scrollbar-width:thin;scrollbar-color:#ba9a68 transparent;
+.mile-notices {min-width:0;align-self:start;padding:8px 3%}
+.dashboard-hero .mile-notices h2 {
+  margin:0;padding:0;max-width:none;text-align:left;
+  font:italic 600 clamp(21px,3.3vw,45px)/1.18 Georgia,serif;
+  color:#ffe0a1;text-shadow:0 2px 3px #382113;
 }
+@supports (background-clip:text) or (-webkit-background-clip:text) {
+  .dashboard-hero .mile-notices h2 {
+    background:linear-gradient(105deg,#ffd891 26%,#fff9e7 45%,#ffe2a4 57%) 120% center / 230% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;
+    filter:drop-shadow(0 2px 2px #432b19);
+    animation:mile-letter-light 3s ease-in-out both;
+  }
+}
+@keyframes mile-letter-light {to {background-position:0% center}}
+.mile-wall {display:flex;position:relative;z-index:3;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;touch-action:pan-x pan-y}
 .mile-wall:empty {display:none}
-.mile-wall:focus-visible {outline:2px solid #fff2c4;outline-offset:-2px}
-@media (min-width:640px) and (orientation:landscape) {
-  .mile-wall {--strip-height:clamp(32px,9.6vh,60px)}
-  .mile-wall:empty {display:block;visibility:hidden}
+.mile-icon-page {flex:0 0 100%;min-width:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));scroll-snap-align:start;align-items:start;padding:3px 0 5px;box-sizing:border-box}
+.mile-strip {min-width:0;text-align:center;display:grid;justify-items:center;gap:1px;
+  font:600 clamp(11px,1.23vw,17px)/1.25 Sarabun,sans-serif;
+  color:white;text-shadow:0 1px 3px #24190c,0 0 3px #24190c;
+  animation:mile-panel-in .4s 9.85s both}
+.mile-strip:nth-child(2){margin-top:5px;animation-delay:10.1s}
+.mile-strip:nth-child(3){margin-top:5px;animation-delay:10.35s}
+.mile-strip:nth-child(4){animation-delay:10.6s}
+.mile-icon-page:not(:first-child) .mile-strip{animation:none}
+.mile-glyph {position:relative;font:normal clamp(26px,3vw,44px)/1.12 sans-serif;filter:drop-shadow(0 1px 2px #392718)}
+.mile-glyph i {position:absolute;right:-2px;bottom:0;font:700 12px/1 sans-serif;background:#185d4b;color:white;border-radius:50%;padding:2px}
+.mile-strip b {max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.mile-strip small {font:inherit;font-size:.92em;border-radius:8px;background:#fff1cfea;color:#322515;text-shadow:none;padding:1px 4px}
+.mile-strip.red small {background:#942132;color:white}
+.mile-strip.green small {background:#d7efdb;color:#16492d}
+@media(min-width:640px) and (orientation:landscape) {
+  .mile-notices {padding:clamp(8px,3vh,20px) 0 0 6%}
+  .mile-wall {margin-top:clamp(5px,2vh,14px)}
+  .mile-strip:nth-child(1){margin-top:18px}
+  .mile-strip:nth-child(2){margin-top:7px}
+  .mile-strip:nth-child(3){margin-top:0}
+  .mile-strip:nth-child(4){margin-top:4px}
 }
-.mile-strip {
-  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
-  min-height:0;align-content:center;column-gap:6px;padding:2px 7px;border:1px solid rgba(255,255,255,.55);
-  border-radius:8px;box-shadow:0 2px 6px #241b1438,inset 0 1px #ffffff42;
-  font:600 clamp(12px,1.5vw,20px)/1.22 Sarabun,sans-serif;
-  animation:mile-panel-in .42s ease-out 9.85s both;
-}
-.mile-strip[hidden] {display:none}
-.mile-strip:nth-child(2) {animation-delay:10.35s}
-.mile-strip:nth-child(3) {animation-delay:10.85s}
-.mile-strip:nth-child(n+4) {animation-delay:11.35s}
-.mile-strip b {font-family:Mali,Sarabun,sans-serif;font-weight:600;line-height:1.4}
-.mile-strip b,.mile-strip small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mile-strip small {grid-column:1/-1;font-size:.83em}
-.mile-strip.red {background:rgba(129,22,41,.95);color:white}
-.mile-strip.yellow {
-  background:linear-gradient(115deg,rgba(233,248,255,.64),rgba(204,235,250,.46) 64%,rgba(224,245,255,.52));
-  color:#17130c;border:1px solid #39728c;
-  text-shadow:0 0 2px #f1fbffcf;
-  box-shadow:inset 0 0 0 1px #f1fcfff0,0 1px 2px #17394738;
-}
-.mile-strip.green {background:rgba(206,242,218,.94);color:#123d2c}
-@media (min-width:640px) and (orientation:landscape) {
-  .mile-wall {padding:4px 0 4px 7%}
-}
+@media(prefers-reduced-motion:reduce){html:not(.motion-enabled) .dashboard-hero .mile-notices h2{animation:none}}
 @keyframes mile-panel-in {
   from {opacity:0;transform:translateX(-12px)}
   to {opacity:1;transform:none}
