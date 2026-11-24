@@ -174,7 +174,9 @@ button.alert-tile{width:100%;text-align:left;color:#172333}
 <section id="ai" class="hidden"><div class="vios-chat-shell"><div class="vios-chat-banner" role="img" aria-label="ViosCare ผู้ช่วยดูแลรถ Toyota Vios รถสีขาวริมทะเล"></div><div class="vios-chat-heading"><span class="vios-chat-online"></span> ผู้ช่วย AI ViosCare <small>ถามเรื่องรถและข้อมูลที่บันทึกไว้ได้</small></div><div class="chatgpt-choices"><a id="openChatGpt" class="chatgpt-launch" aria-label="เปิดแอป ChatGPT" title="เปิดแอป ChatGPT" hidden><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="" width="48" height="48" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">GPT</span></a></div><div id="viosAiMessages" aria-live="polite"><div class="vios-ai-bubble assistant">สวัสดีครับ มีอะไรให้ผมช่วยดูแลรถ Vios ของคุณบ้างครับ</div></div><div class="vios-chat-controls"><div class="vios-chat-compose"><textarea id="viosAiQuestion" rows="1" aria-label="พิมพ์คำถาม" placeholder="พิมพ์คำถามที่นี่..."></textarea><button id="viosAiMic" type="button" aria-label="เริ่มหรือหยุดสนทนาด้วยเสียง">🎤<span class="vios-mic-label">เริ่มสนทนา</span></button><button id="viosAiSend" type="button" aria-label="ส่งข้อความ">➤</button></div><div class="vios-chat-shortcut-title">คำถามลัด · แตะเพื่อวิเคราะห์ทันที</div><div class="vios-ai-presets"><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติซ่อมบำรุงรถที่บันทึกไว้ สรุปงานล่าสุด ค่าใช้จ่าย และสิ่งที่ควรติดตาม">🔧 <span>ประวัติซ่อม</span></button><button type="button" data-vios-q="ช่วยตรวจวันครบกำหนดต่ออายุภาษีรถ ประกันภัย พ.ร.บ. และตรวจสภาพ LPG จากข้อมูลในแอป พร้อมบอกวันที่">📅 <span>วันต่ออายุ</span></button><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติเติมน้ำมันเบนซินและ LPG ล่าสุดในแอป สรุปปริมาณ ค่าใช้จ่าย และแนวโน้มที่คำนวณได้">⛽ <span>เบนซิน / LPG</span></button><button type="button" data-vios-q="ช่วยตรวจรายการบำรุงรักษาและการต่ออายุที่ใกล้ครบกำหนดจากข้อมูลรถ พร้อมจัดลำดับสิ่งที่ควรทำ">🔔 <span>ใกล้ครบกำหนด</span></button></div><p id="viosAiStatus" role="status" aria-live="polite">พร้อมช่วยดูแลรถของคุณ</p><p class="vios-chat-privacy">เมื่ออนุญาตครั้งแรก ระบบจะส่งข้อมูลรถที่เกี่ยวข้องให้ Gemini เพื่อวิเคราะห์เท่านั้น · AI ไม่แก้ไขข้อมูลรถ</p></div><input type="checkbox" id="viosAiAutoSpeak" checked hidden><button id="viosAiReplay" hidden type="button">ฟังซ้ำ</button><button id="viosAiStop" hidden type="button">หยุด</button></div></section>
 <section id="home">
 <div class="card dashboard-hero">
-  <h2><span class="mile-bell" aria-hidden="true">🔔</span> ศูนย์แจ้งเตือนรถของฉัน</h2>
+  <div class="mile-wall" role="region" aria-label="รายการแจ้งเตือนรถที่ควรดูก่อน">
+    <div class="mile-strip" hidden></div><div class="mile-strip" hidden></div><div class="mile-strip" hidden></div>
+  </div>
   <div class="mile-stage">
     <div class="mile-road" aria-hidden="true"></div>
     <div class="mile-car" aria-hidden="true"><i class="mile-park"></i>
@@ -368,8 +370,8 @@ function renderAlerts(){let a=[];
   }
   const urgent=a.filter(item=>item.level==='red').length;
   const sign=$('mileSign');
-  const state=urgent?'เร่งด่วน':a.length?'เตือนล่วงหน้า':'ยังไม่มี';
-  const count=a.length?(urgent||a.length)+' รายการ':'รายการเตือน';
+  const state=urgent?'แจ้งเตือน':a.length?'เตือนล่วงหน้า':'ยังไม่มี';
+  const count=a.length?a.length+' รายการ':'รายการเตือน';
   $('mileState').textContent=state;
   $('mileCount').textContent=count;
   sign.firstElementChild.setAttribute('aria-label',state+' '+count);
@@ -377,6 +379,16 @@ function renderAlerts(){let a=[];
   updateUrgentBanner(a);
   const order={red:0,green:1,yellow:2};a.sort((x,y)=>order[x.level]-order[y.level]||(x.days??99999)-(y.days??99999));
   for(const [level,id] of [['red','overdueCount'],['green','nearCount'],['yellow','earlyCount']])$(id).textContent=a.filter(x=>x.level===level).length;
+  document.querySelectorAll('.mile-strip').forEach((strip,index)=>{
+    const item=a[index];
+    strip.hidden=!item;
+    if(!item)return;
+    strip.className='mile-strip '+item.level;
+    const symbol=item.level==='red'?'⚠':item.days===null?'◉':'◷';
+    const detail=item.meta.split(' • ').find(part=>item.days!==null?part.startsWith('วันที่ '):part.endsWith('กม.'))||item.meta.split(' • ')[0];
+    const content='<b>'+esc(item.label)+'</b><strong><span aria-hidden="true">'+symbol+'</span> '+esc(item.status)+'</strong><small>'+esc(detail)+'</small>';
+    if(strip._content!==content){strip.innerHTML=content;strip._content=content}
+  });
   $('alerts').innerHTML=a.map(x=>x.html).join('')||'<div class="empty-state">✅ ยังไม่มีรายการแจ้งเตือนตามวันที่หรือเลขไมล์<br><span class="muted">เตือนภายใน 90 วัน หรือเมื่อเหลือไม่เกิน 1,000 กม. กรุณาระบุเลขไมล์ปัจจุบันและกำหนดครั้งถัดไป</span></div>';
   renderVehicleAge();
   const upcoming=renewalDates().map(([key,label])=>[label,renewalDue(key)]);
