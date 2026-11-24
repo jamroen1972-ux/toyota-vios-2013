@@ -174,7 +174,7 @@ button.alert-tile{width:100%;text-align:left;color:#172333}
 <section id="ai" class="hidden"><div class="vios-chat-shell"><div class="vios-chat-banner" role="img" aria-label="ViosCare ผู้ช่วยดูแลรถ Toyota Vios รถสีขาวริมทะเล"></div><div class="vios-chat-heading"><span class="vios-chat-online"></span> ผู้ช่วย AI ViosCare <small>ถามเรื่องรถและข้อมูลที่บันทึกไว้ได้</small></div><div class="chatgpt-choices"><a id="openChatGpt" class="chatgpt-launch" aria-label="เปิดแอป ChatGPT" title="เปิดแอป ChatGPT" hidden><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="" width="48" height="48" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">GPT</span></a></div><div id="viosAiMessages" aria-live="polite"><div class="vios-ai-bubble assistant">สวัสดีครับ มีอะไรให้ผมช่วยดูแลรถ Vios ของคุณบ้างครับ</div></div><div class="vios-chat-controls"><div class="vios-chat-compose"><textarea id="viosAiQuestion" rows="1" aria-label="พิมพ์คำถาม" placeholder="พิมพ์คำถามที่นี่..."></textarea><button id="viosAiMic" type="button" aria-label="เริ่มหรือหยุดสนทนาด้วยเสียง">🎤<span class="vios-mic-label">เริ่มสนทนา</span></button><button id="viosAiSend" type="button" aria-label="ส่งข้อความ">➤</button></div><div class="vios-chat-shortcut-title">คำถามลัด · แตะเพื่อวิเคราะห์ทันที</div><div class="vios-ai-presets"><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติซ่อมบำรุงรถที่บันทึกไว้ สรุปงานล่าสุด ค่าใช้จ่าย และสิ่งที่ควรติดตาม">🔧 <span>ประวัติซ่อม</span></button><button type="button" data-vios-q="ช่วยตรวจวันครบกำหนดต่ออายุภาษีรถ ประกันภัย พ.ร.บ. และตรวจสภาพ LPG จากข้อมูลในแอป พร้อมบอกวันที่">📅 <span>วันต่ออายุ</span></button><button type="button" data-vios-q="ช่วยวิเคราะห์ประวัติเติมน้ำมันเบนซินและ LPG ล่าสุดในแอป สรุปปริมาณ ค่าใช้จ่าย และแนวโน้มที่คำนวณได้">⛽ <span>เบนซิน / LPG</span></button><button type="button" data-vios-q="ช่วยตรวจรายการบำรุงรักษาและการต่ออายุที่ใกล้ครบกำหนดจากข้อมูลรถ พร้อมจัดลำดับสิ่งที่ควรทำ">🔔 <span>ใกล้ครบกำหนด</span></button></div><p id="viosAiStatus" role="status" aria-live="polite">พร้อมช่วยดูแลรถของคุณ</p><p class="vios-chat-privacy">เมื่ออนุญาตครั้งแรก ระบบจะส่งข้อมูลรถที่เกี่ยวข้องให้ Gemini เพื่อวิเคราะห์เท่านั้น · AI ไม่แก้ไขข้อมูลรถ</p></div><input type="checkbox" id="viosAiAutoSpeak" checked hidden><button id="viosAiReplay" hidden type="button">ฟังซ้ำ</button><button id="viosAiStop" hidden type="button">หยุด</button></div></section>
 <section id="home">
 <div class="card dashboard-hero">
-  <div id="mileWall" class="mile-wall" role="region" aria-label="รายการแจ้งเตือนรถทั้งหมด" tabindex="0"></div>
+  <div class="mile-notices"><h2 lang="en">Service Alerts</h2><div id="mileWall" class="mile-wall" role="region" aria-label="รายการแจ้งเตือนรถทั้งหมด" tabindex="0"></div></div>
   <div class="mile-stage">
     <div class="mile-road" aria-hidden="true"></div>
     <div class="mile-car" aria-hidden="true"><i class="mile-park"></i>
@@ -289,6 +289,34 @@ function addMonths(dt,n){const r=new Date(dt.getTime()),day=r.getDate();r.setDat
 function dayDiff(d){const t=new Date();return Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(t.getFullYear(),t.getMonth(),t.getDate()))/86400000)}function warrantyBadge(r){let d=warrantyEnd(r);if(!d)return r.warrantyType==='none'?'ไม่มีประกัน':'ไม่ระบุประกัน';let left=dayDiff(d);return left<0?'หมดประกันแล้ว ('+dateISO(d)+')':left<=30?'ใกล้หมดประกัน '+left+' วัน':'เหลือประกัน '+left+' วัน (ถึง '+dateISO(d)+')'}function link(url,label){try{let u=new URL(url);if(!['http:','https:'].includes(u.protocol))return '';return `<a href="${esc(u.href)}" target="_blank" rel="noopener noreferrer">${label}</a>`}catch{return ''}}function phone(v){return v?`<a href="tel:${esc(String(v).replace(/[^+0-9]/g,''))}">📞 ${esc(v)}</a>`:''}
 function setTab(tab){document.body.classList.toggle('overview-open',tab==='home');document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hidden',s.id!==tab));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));cats.forEach(c=>{document.querySelector('[name=category]').add(new Option(c,c));$('filterCategory').add(new Option(c,c))});
 function render(){const repairs=[...db.repairs].sort((a,b)=>(b.date||'').localeCompare(a.date||''));renderAlerts();renderHistory();renderTasks();renderContacts();renderReport();renderRenewals();let sellers=[...new Set(repairs.map(r=>r.seller).filter(Boolean))],garages=[...new Set(repairs.map(r=>r.garage).filter(Boolean))];$('sellerList').innerHTML=sellers.map(s=>`<option value="${esc(s)}">`).join('');$('garageList').innerHTML=garages.map(s=>`<option value="${esc(s)}">`).join('')}
+const renewalIcons={
+  taxDue:['📘','ภาษีรถ'],prbDue:['📄','พ.ร.บ.'],inspectionDue:['🚘','ตรอ.','✓'],
+  lpgCheckDue:['🎛️','ตรวจแก๊ส'],tankTestDue:['🛢️','ถังแก๊ส']
+};
+function wallIcon(item){
+  if(renewalIcons[item.dueKey])return renewalIcons[item.dueKey];
+  if(item.label.startsWith('ประกันอะไหล่'))return ['⚙️','ประกันอะไหล่','✓'];
+  if(item.label.startsWith('ภาคสมัครใจ'))return ['🛡️','ประกันรถ'];
+  const symbol=/น้ำมันเครื่อง/.test(item.label)?'🛢️':/ยาง|ล้อ/.test(item.label)?'🛞':/แบต/.test(item.label)?'🔋':'🔧';
+  return [symbol,item.label];
+}
+function renderWallIcons(items){
+  const wall=$('mileWall');
+  const pages=[];
+  items.forEach((item,index)=>{
+    const [symbol,label,mark]=wallIcon(item);
+    const page=Math.floor(index/4);
+    if(!pages[page])pages[page]=[];
+    let status=item.status;
+    if(item.days>0)status=item.days+' วัน';
+    if(item.days===0)status='วันนี้';
+    if(item.days<0)status='เกิน '+Math.abs(item.days)+' วัน';
+    if(item.kmLeft!=null && item.days===null)status=item.kmLeft<0?'เกิน '+Math.abs(item.kmLeft).toLocaleString('th-TH')+' กม.':item.kmLeft===0?'ถึงกำหนด':item.kmLeft.toLocaleString('th-TH')+' กม.';
+    pages[page].push('<div class="mile-strip '+item.level+'" aria-label="'+esc(item.label+' '+item.status)+'"><span class="mile-glyph" aria-hidden="true">'+symbol+(mark?'<i>'+mark+'</i>':'')+'</span><b>'+esc(label)+'</b><small>'+esc(status)+'</small></div>');
+  });
+  const html=pages.map(group=>'<div class="mile-icon-page">'+group.join('')+'</div>').join('');
+  if(wall._content!==html){wall.innerHTML=html;wall._content=html}
+}
 function alertItem(label,days,meta,kmLeft=null,dueKey=null){
   let level=days!==null?(days<=30?'red':days<=90?'yellow':''):(kmLeft!==null?(kmLeft<=0?'red':kmLeft<=1000?'green':''):'');
   if(!level)return null;
@@ -302,7 +330,7 @@ function alertItem(label,days,meta,kmLeft=null,dueKey=null){
     else action='เตือนล่วงหน้า';
   }else if(days>0)action='เร่งดำเนินการ';
   const heading=action?action+' · '+status:status;
-  return {level,days,label,meta,status,html:`<${tag}${attrs} class="alert-tile ${level}"><b class="alert-title">${esc(label)}</b><span class="alert-status">${esc(heading)}</span><span class="alert-date">${esc(meta)}</span></${tag}>`};
+  return {level,days,kmLeft,dueKey,label,meta,status,html:`<${tag}${attrs} class="alert-tile ${level}"><b class="alert-title">${esc(label)}</b><span class="alert-status">${esc(heading)}</span><span class="alert-date">${esc(meta)}</span></${tag}>`};
 }
 $('mileReplay').addEventListener('click',event=>{
   const banner=event.currentTarget.closest('.dashboard-hero');
@@ -375,18 +403,11 @@ function renderAlerts(){let a=[];
   sign.firstElementChild.setAttribute('aria-label',state+' '+count);
   sign.className=urgent?'urgent':a.length?'early':'clear';
   updateUrgentBanner(a);
-  const order={red:0,green:1,yellow:2};a.sort((x,y)=>order[x.level]-order[y.level]||(x.days??99999)-(y.days??99999));
+  // Calendar and mileage have different units. Surface due items first, then upcoming dates, then remaining mileage.
+  const priority=item=>item.days!==null?(item.days<=0?0:2):(item.kmLeft<=0?1:3);
+  a.sort((x,y)=>priority(x)-priority(y)||((x.days??x.kmLeft)-(y.days??y.kmLeft)));
   for(const [level,id] of [['red','overdueCount'],['green','nearCount'],['yellow','earlyCount']])$(id).textContent=a.filter(x=>x.level===level).length;
-  const wall=$('mileWall');
-  while(wall.children.length>a.length)wall.lastElementChild.remove();
-  a.forEach((item,index)=>{
-    const strip=wall.children[index]||wall.appendChild(document.createElement('div'));
-    strip.className='mile-strip '+item.level;
-    const symbol=item.level==='red'?'⚠':item.days===null?'◉':'◷';
-    const detail=item.meta.split(' • ').find(part=>item.days!==null?part.startsWith('วันที่ '):part.endsWith('กม.'))||item.meta.split(' • ')[0];
-    const content='<b>'+esc(item.label)+'</b><strong><span aria-hidden="true">'+symbol+'</span> '+esc(item.status)+'</strong><small>'+esc(detail)+'</small>';
-    if(strip._content!==content){strip.innerHTML=content;strip._content=content}
-  });
+  renderWallIcons(a);
   $('alerts').innerHTML=a.map(x=>x.html).join('')||'<div class="empty-state">✅ ยังไม่มีรายการแจ้งเตือนตามวันที่หรือเลขไมล์<br><span class="muted">เตือนภายใน 90 วัน หรือเมื่อเหลือไม่เกิน 1,000 กม. กรุณาระบุเลขไมล์ปัจจุบันและกำหนดครั้งถัดไป</span></div>';
   renderVehicleAge();
   const upcoming=renewalDates().map(([key,label])=>[label,renewalDue(key)]);
